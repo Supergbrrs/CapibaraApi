@@ -1,285 +1,42 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Buscador de CEP - Capivara API</title>
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-      font-family: 'Sora', sans-serif;
-      background: linear-gradient(-45deg, #ff6600, #ff9900, #ff3300, #ff6600);
-      background-size: 400%;
-      animation: bgAnimation 10s ease infinite;
-    }
-
-    @keyframes bgAnimation {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    main {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .card-wrapper {
-      perspective: 1200px;
-    }
-
-    .capibara-card {
-      position: relative;
-      width: 360px; /* Levemente alargado para caber o texto do endereço */
-      padding: 35px 25px;
-      border-radius: 30px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-      background: rgba(255,255,255,0.15);
-      backdrop-filter: blur(12px);
-      border: 2px solid rgba(255,255,255,0.25);
-      box-shadow: 0 0 20px rgba(255,255,255,0.1), 0 0 40px rgba(255,102,0,0.4);
-      transform-style: preserve-3d;
-      transition: 0.6s;
-      animation: floating 4s ease-in-out infinite;
-    }
-
-    @keyframes floating {
-      0% { transform: translateY(0px); }
-      50% { transform: translateY(-15px); }
-      100% { transform: translateY(0px); }
-    }
-
-    .capibara-card:hover {
-      transform: rotateX(5deg) rotateY(-5deg) scale(1.02); /* Suavizado para facilitar a digitação */
-    }
-
-    .shimmer-layer {
-      position: absolute;
-      width: 120px;
-      height: 500px;
-      background: rgba(255,255,255,0.15);
-      top: -100px;
-      left: -180px;
-      transform: rotate(25deg);
-      transition: 1s;
-    }
-
-    .capibara-card:hover .shimmer-layer {
-      left: 420px;
-    }
-
-    .capivara-img {
-      width: 150px;
-      height: 150px;
-      object-fit: cover;
-      border-radius: 50%;
-      border: 5px solid white;
-      transition: 0.5s;
-      transform: translateZ(40px);
-      box-shadow: 0 0 20px rgba(255,255,255,0.5);
-    }
-
-    .capivara-img:hover {
-      transform: translateZ(60px) rotate(8deg) scale(1.08);
-    }
-
-    .card-text {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 15px;
-      text-align: center;
-      width: 100%;
-    }
-
-    .card-text h3 {
-      font-size: 28px;
-      color: white;
-      transition: 0.5s;
-      transform: translateZ(40px);
-      text-shadow: 0 0 10px rgba(0,0,0,0.3);
-    }
-
-    /* ESTILIZAÇÃO DO NOVO INPUT COM EFEITO 3D */
-    .cep-input {
-      width: 80%;
-      padding: 12px;
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.5);
-      background: rgba(255,255,255,0.2);
-      color: white;
-      font-family: 'Sora', sans-serif;
-      font-size: 16px;
-      text-align: center;
-      outline: none;
-      transform: translateZ(30px);
-      transition: 0.4s;
-    }
-
-    .cep-input::placeholder {
-      color: rgba(255,255,255,0.7);
-    }
-
-    .cep-input:focus {
-      background: rgba(255,255,255,0.4);
-      transform: translateZ(50px) scale(1.05);
-      box-shadow: 0 0 15px rgba(255,255,255,0.5);
-    }
-
-    /* ÁREA DO RESULTADO */
-    #resultado {
-      color: white;
-      line-height: 1.4;
-      font-size: 14px;
-      min-height: 60px; /* Mantém o tamanho do card fixo mesmo sem texto */
-      transition: 0.5s;
-      transform: translateZ(25px);
-    }
-
-    .btn {
-      position: relative;
-      overflow: hidden;
-      border: none;
-      background: white;
-      color: #ff6600;
-      padding: 14px 45px;
-      border-radius: 40px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.4s;
-      transform: translateZ(35px);
-      width: 80%;
-    }
-
-    .btn:hover {
-      background: #f2f2f2;
-      transform: translateZ(50px) scale(1.08);
-    }
-
-    .btn::before {
-      content: "";
-      position: absolute;
-      width: 40px;
-      height: 200px;
-      background: rgba(255,255,255,0.5);
-      top: -50px;
-      left: -100px;
-      transform: rotate(25deg);
-      transition: 0.8s;
-    }
-
-    .btn:hover::before {
-      left: 250px;
-    }
-
-    /* Utilitário para erros */
-    .erro-texto {
-      color: #ffeb3b;
-      font-weight: bold;
-    }
-  </style>
+  <title>Consulta CEP Capivara</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <main>
-    <div class="card-wrapper">
-      <div class="capibara-card">
-        <div class="shimmer-layer"></div>
-        <img src="Capivara 3x4.jpg" alt="Capibara" class="capivara-img">
+    <div class="cards-container">
 
-        <div class="card-text">
-          <h3>Onde estou?</h3>
-          
-          <input type="text" id="inputCep" class="cep-input" placeholder="Digite o CEP" maxlength="8">
-          
-          <div id="resultado">
-            <p>Descubra o endereço da capivara!</p>
+      <!-- Card de pesquisa -->
+      <div class="card-wrapper">
+        <div class="capibara-card">
+          <div class="shimmer-layer"></div>
+          <img src="Capivara 3x4.jpg" alt="Capivara" class="capivara-img">
+          <div class="card-text">
+            <h3>Buscar CEP</h3>
+            <input type="text" id="inputCep" class="cep-input" placeholder="Digite o CEP">
+            <button id="btnBuscar" class="btn">Buscar CEP</button>
           </div>
-
-          <button class="btn" id="btnBuscar">Buscar CEP</button>
         </div>
       </div>
+
+      <!-- Card de resultado (aparece após a busca) -->
+      <div class="card-wrapper resultado-wrapper" id="resultadoWrapper" style="display:none;">
+        <div class="capibara-card resultado-card">
+          <div class="shimmer-layer"></div>
+          <div id="resultado"></div>
+        </div>
+      </div>
+
     </div>
   </main>
 
-  <script>
-    // 1. Mapeando os elementos do DOM (eles já dominam isso)
-    const inputCep = document.getElementById('inputCep');
-    const btnBuscar = document.getElementById('btnBuscar');
-    const divResultado = document.getElementById('resultado');
-
-    // 2. Criando a função Assíncrona para buscar a API
-    async function consultarAPI() {
-      // Pega apenas os números digitados
-      const cep = inputCep.value.replace(/\D/g, ''); 
-
-      // Validação simples (UX)
-      if (cep.length !== 8) {
-        divResultado.innerHTML = `<p class="erro-texto">CEP inválido! Digite 8 números.</p>`;
-        return;
-      }
-
-      // Estado de Loading (UX)
-      btnBuscar.textContent = "Buscando...";
-      divResultado.innerHTML = `<p>Consultando o correio capivara...</p>`;
-
-      try {
-        // Chamando o garçom (Fetch) e esperando a resposta (Await)
-        const url = `https://viacep.com.br/ws/${cep}/json/`;
-        const resposta = await fetch(url);
-        const dados = await resposta.json();
-
-        // Validando se o CEP existe na base dos Correios
-        if (dados.erro) {
-          divResultado.innerHTML = `<p class="erro-texto">CEP não encontrado!</p>`;
-        } else {
-          // Injetando os dados no DOM com Template Literals
-          divResultado.innerHTML = `
-            <p><strong>${dados.logradouro}</strong></p>
-            <p>${dados.bairro}</p>
-            <p>${dados.localidade} - ${dados.uf}</p>
-          `;
-        }
-
-      } catch (erro) {
-        // Lidando com queda de internet ou erro na API
-        console.error(erro);
-        divResultado.innerHTML = `<p class="erro-texto">Erro na conexão!</p>`;
-      } finally {
-        // Voltando o botão ao estado original independente de dar certo ou errado
-        btnBuscar.textContent = "Buscar CEP";
-      }
-    }
-
-    // 3. Adicionando o ouvinte de evento no botão
-    btnBuscar.addEventListener('click', consultarAPI);
-
-    // Bônus UX: Acionar o botão com a tecla "Enter" no input
-    inputCep.addEventListener('keydown', (evento) => {
-      if (evento.key === 'Enter') {
-        consultarAPI();
-      }
-    });
-  </script>
-
+  <script src="script.js"></script>
 </body>
 </html>
